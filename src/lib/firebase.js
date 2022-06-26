@@ -24,8 +24,8 @@ const addFirebaseItem = async (item) => {
   await db.collection("todos").add(item);
 };
 
-const updateFirebaseItem = async (item) => {
-  await db.collection("todos").doc(item.id).update(item);
+const updateFirebaseItem = async (item, id) => {
+  await db.collection("todos").doc(id).update(item);
 };
 
 const deleteFirebaseItem = async (item) => {

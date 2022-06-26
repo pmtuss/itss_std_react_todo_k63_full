@@ -24,8 +24,8 @@ function useFirestore() {
   };
 
   const updateItem = async (item) => {
-    const newItem = { ...item, done: !item.done };
-    await updateFirebaseItem(newItem);
+    const newItem = { text: item.text, done: !item.done };
+    await updateFirebaseItem(newItem, item.id);
   };
 
   const clearItems = () => {
