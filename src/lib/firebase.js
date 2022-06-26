@@ -12,3 +12,31 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const getFirebaseItems = async () => {
+  const snapshot = await db.collection("todos").get();
+  const items = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  return items;
+};
+
+const addFirebaseItem = async (item) => {
+  await db.collection("todos").add(item);
+};
+
+const updateFirebaseItem = async (item) => {
+  await db.collection("todos").doc(item.id).update(item);
+};
+
+const deleteFirebaseItem = async (item) => {
+  await db.collection("todos").doc(item.id).delete();
+};
+
+export {
+  getFirebaseItems,
+  addFirebaseItem,
+  updateFirebaseItem,
+  deleteFirebaseItem,
+};
+
+export default firebase;
