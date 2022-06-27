@@ -13,6 +13,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const auth = firebase.auth();
 
 const getFirebaseItems = async () => {
   const snapshot = await db.collection("todos").get();
@@ -32,11 +33,44 @@ const deleteFirebaseItem = async (item) => {
   await db.collection("todos").doc(item.id).delete();
 };
 
+const storeUserInfo = async (user) => {
+  const { uid } = user;
+  const userDoc = await db.collection("users").doc(uid).get();
+  if (!userDoc.exists) {
+    await db.collection("users").doc(uid).set({ name: user.displayName });
+    return {
+      name: user.displayName,
+      id: uid,
+    };
+  } else {
+    return {
+      id: uid,
+      ...userDoc.data(),
+    };
+  }
+}
+
+const updateUser = async (user, image) => {
+  try {
+    const userDoc = await firebase.firestore().collection("users").doc(user.id).get();
+    if (userDoc.exists) {
+      await firebase.firestore().collection("users").doc(user.id).update({ ...userDoc.data(), image: image });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export {
+  auth,
+  
   getFirebaseItems,
   addFirebaseItem,
   updateFirebaseItem,
   deleteFirebaseItem,
+
+  storeUserInfo,
+  updateUser,
 };
 
 export default firebase;
